@@ -1,0 +1,32 @@
+This is a simple web server using C on Linux.
+============================================
+Copyright Xianda Yu 
+
+it is based on Paul Griffiths 1999.
+============================================
+
+It use socket to build a web server in c, and
+it use multiprocess to meet requests at the 
+same time.
+
+In program, including:
+../
+Makefile
+webServ.c
+handle.h
+handle.c
+Util.h
+Util.c
+ReqModule.h
+ReqModule.c
+RespModule.h
+RespModele.c
+Resource.h
+Resource.c
+www/
+
+===============================================
+istall command:
+	make
+clean unsource file:
+	make clean
