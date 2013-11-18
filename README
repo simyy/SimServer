@@ -11,6 +11,7 @@ same time.
 
 In program, including:
 ../
+README
 Makefile
 webServ.c
 handle.h
