@@ -33,4 +33,6 @@ clean unsource file:
 	make clean
 
 ==============================================
-2013/11/19 : add memory pool function.
+2013/11/19 : 
+1.add memory pool function.
+2.fix bug in pool.			
