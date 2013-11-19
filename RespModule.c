@@ -47,7 +47,7 @@ int ReturnResponse(int fd, struct ReqInfo* reqInfo)
 	if(res_fd > 0)
 		close(res_fd);
 
-	FreeReqInfo(reqInfo);
+//	FreeReqInfo(reqInfo);
 
 	
 	/*
