@@ -17,7 +17,7 @@
  * Parse HTTP header
  *
  */
-int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo)
+int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo, struct pool* m_pool)
 {
 	char* ptr;
 	int   len;
@@ -53,7 +53,8 @@ int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo)
 	}
 	
 	/* alloc resource space */
-	reqInfo->resource = calloc(len+1, sizeof(char));
+	reqInfo->resource = palloc(m_pool, len+1);
+	//reqInfo->resource = calloc(len+1, sizeof(char));
 	strncpy(reqInfo->resource, buffer, len);
 	
 	/* Get HTTP version */
@@ -65,8 +66,6 @@ int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo)
 	firstHeader = 0;
 	}//end of firstHeader
 
-
-
 	return 0;
 }
 
@@ -75,7 +74,7 @@ int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo)
  * Get request content.
  * 
  */
-int GetReqContent(int fd, struct ReqInfo* reqInfo)
+int GetReqContent(int fd, struct ReqInfo* reqInfo, struct pool* m_pool)
 {
 	char buffer[MAX_REQ_LINE];
 	int  flag;
@@ -107,7 +106,7 @@ int GetReqContent(int fd, struct ReqInfo* reqInfo)
 
 			if(buffer[0] == '\0')
 				break;
-			if(ParseHttpHeader(buffer, reqInfo))
+			if(ParseHttpHeader(buffer, reqInfo, m_pool))
 				break;
 		}
 	}while(reqInfo->type != SIMPLE);

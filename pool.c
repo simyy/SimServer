@@ -37,11 +37,21 @@ struct pool* createPool(size_t size)
 void destroyPool(struct pool* m_pool)
 {
 	struct pool_block* p;
-
-	for(p = m_pool->head; p != NULL; p = p->next){
+	struct pool_block* ptr;
+	int i;
+	
+	p = m_pool->head;
+	for(i = 0; i < m_pool->n; ++i){
+		ptr = p->next;
+		free(p);
+		p = ptr;
+	}
+	/*
+	for(p = m_pool->head; p != NULL; p = ptr){
+		ptr = p->next;
 		free(p);
 	}	
-
+*/
 	printf("destroy success.\n");
 }
 
@@ -50,7 +60,6 @@ void* palloc(struct pool* m_pool, size_t size)
 	char*       s;
 	struct pool_block* p;
 	struct pool_block* q;
-	void*		ss;
 	int i;
 
 	p = m_pool->head;
@@ -61,17 +70,21 @@ void* palloc(struct pool* m_pool, size_t size)
 			printf("palloc success.\n");	
 			return s;	
 		}
-		p = p->next;	
+		if(p->next != NULL)
+			p = p->next;	
 	}
 
-	ss = malloc(MAX_SIZE);
-	q->last  = ss;
-	q->end   = ss + MAX_SIZE;
+	if(size < MAX_SIZE)	
+		q = (struct pool_block*)malloc(MAX_SIZE);
+	else
+		q = (struct pool_block*)malloc(size);
+	q->last  = (char*)q;
+	q->end   = (char*)q + MAX_SIZE;
 	q->next = NULL;
 
 	p->next = q;
 	m_pool->n += 1;
 	
 	printf("palloc success.\n");	
-	return ss;
+	return (void*)q;
 }

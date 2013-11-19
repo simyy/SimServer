@@ -15,6 +15,7 @@
 #include <error.h>
 
 #include "handle.h"
+#include "pool.h"
 
 #define PORT 9000
 #define LISTEN_NUM 1024
@@ -72,6 +73,7 @@ int main(int argc, char* argv[])
 			perror("accept fail !\n");
 			continue;
 		}
+		/*
 		pid = fork();
 		if(pid == 0){
 			close(serv_fd);
@@ -81,8 +83,8 @@ int main(int argc, char* argv[])
 			
 		close(client_fd);
 		waitpid(-1, NULL, WNOHANG);
-
-//		handleRequest(client_fd);
+*/
+		handleRequest(client_fd);
 	}
 
 	return 0;

@@ -22,7 +22,7 @@ void handleRequest(int fd)
 	reqInfo = (struct ReqInfo*)palloc(m_pool, sizeof(struct ReqInfo));
 	InitReqInfo(reqInfo);
 
-	GetReqContent(fd, reqInfo);
+	GetReqContent(fd, reqInfo, m_pool);
 	printf("status: %d\n", reqInfo->status);
 	printf("recv buffer: %s\n", reqInfo->resource);
 	ReturnResponse(fd, reqInfo);
