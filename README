@@ -20,6 +20,7 @@ Util.h
 Util.c
 pool.h
 pool.c
+daemon.c
 ReqModule.h
 ReqModule.c
 RespModule.h
@@ -37,4 +38,6 @@ clean unsource file:
 ==============================================
 2013/11/19 : 
 1.add memory pool function.
-2.fix bug in pool.			
+2.fix bug in pool.		
+2013/11/21 :
+ add a function of linux daemon process.	

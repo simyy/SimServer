@@ -16,6 +16,7 @@
 
 #include "handle.h"
 #include "pool.h"
+#include "Util.h"
 
 #define PORT 9000
 #define LISTEN_NUM 1024
@@ -26,6 +27,8 @@ int main(int argc, char* argv[])
 	int client_fd;
 
 	int ret;
+
+	init_daemon();
 
 	pid_t pid;
 	struct sockaddr_in serv_addr;

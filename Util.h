@@ -28,4 +28,7 @@ void FreeReqInfo(struct ReqInfo* reqInfo);
 /* as trim in JAVA */
 void Trim(char* buffer);
 
+/* linux daemon process */
+void init_daemon();
+
 #endif

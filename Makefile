@@ -1,5 +1,5 @@
-webServ : webServ.o handle.o ReqModule.o RespModule.o Resource.o Util.o pool.o
-	gcc -g -o webServ webServ.o handle.o ReqModule.o RespModule.o Resource.o  Util.o pool.o
+webServ : webServ.o handle.o ReqModule.o RespModule.o Resource.o Util.o pool.o daemon.o
+	gcc -g -o webServ webServ.o handle.o ReqModule.o RespModule.o Resource.o  Util.o pool.o daemon.o
 
 webServ.o : webServ.c handle.h
 	gcc -g -c  webServ.c 
@@ -21,6 +21,9 @@ pool.o : pool.c pool.h
 
 Util.o : Util.c Util.h
 	gcc -g -c Util.c
+
+daemon.o : daemon.c
+	gcc -g -c daemon.c
 
 clean :
 	rm *.o webServ
