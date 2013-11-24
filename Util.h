@@ -13,10 +13,13 @@
 /* User difined info */
 enum Req_Method {GET, HEAD, UNSUPPORTED};
 enum Req_Type   {SIMPLE, FULL};
+enum Req_PageType {STATIC, DYNAMIC};
 
 struct ReqInfo{
 	enum Req_Method method;
 	enum Req_Type   type;
+
+	enum Req_PageType pageType;	
 
 	char*           resource;
 	int             status;
@@ -30,5 +33,8 @@ void Trim(char* buffer);
 
 /* linux daemon process */
 void init_daemon();
+
+/*  */
+int Pipe(int pipefd[2]);
 
 #endif

@@ -19,6 +19,12 @@ int ReturnResponse(int fd, struct ReqInfo* reqInfo)
 	int  res_fd;
 
 	int flag;
+	
+	if(reqInfo->pageType == DYNAMIC){
+		OutputHttpHeaders(fd, reqInfo);
+		servDynamic(fd, reqInfo);
+		return 0;
+	}
 
 	/*  */
 	res_fd = CheckResource(reqInfo); 
@@ -33,7 +39,7 @@ int ReturnResponse(int fd, struct ReqInfo* reqInfo)
 	
 	if(reqInfo->type == FULL)
 		OutputHttpHeaders(fd, reqInfo);
-		
+	
 	if(reqInfo->status == 200){
 		flag = ReturnResource(fd, res_fd, reqInfo);
 		if(flag == -1){
@@ -70,5 +76,27 @@ int OutputHttpHeaders(int conn, struct ReqInfo* reqinfo)
 	WriteLine(conn, "Server: WebServ v0.1\r\n", 24);
 	WriteLine(conn, "Content-Type: text/html\r\n", 25);
 	WriteLine(conn, "\r\n", 2);
+	return 0;
+}
+
+int servDynamic(int fd, struct ReqInfo* reqInfo)
+{
+	if(reqInfo->method == GET)
+		getDynamic(fd, reqInfo);
+	else
+		postDynamic(fd, reqInfo);
+	return 0;
+}
+
+int getDynamic(int fd, struct ReqInfo* reqInfo)
+{
+	
+	return 0;
+}
+
+int postDynamic(int fd, struct ReqInfo* reqInfo)
+{
+	
+
 	return 0;
 }

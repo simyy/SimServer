@@ -1,5 +1,5 @@
-webServ : webServ.o handle.o ReqModule.o RespModule.o Resource.o Util.o pool.o daemon.o
-	gcc -g -o webServ webServ.o handle.o ReqModule.o RespModule.o Resource.o  Util.o pool.o daemon.o
+webServ : webServ.o handle.o ReqModule.o RespModule.o Resource.o Util.o pool.o daemon.o cgi log.o
+	gcc -g -o webServ webServ.o handle.o ReqModule.o RespModule.o Resource.o  Util.o pool.o daemon.o log.o
 
 webServ.o : webServ.c handle.h
 	gcc -g -c  webServ.c 
@@ -25,5 +25,12 @@ Util.o : Util.c Util.h
 daemon.o : daemon.c
 	gcc -g -c daemon.c
 
+log.o : log.c 
+	gcc -g -c log.c
+
+cgi:
+	(cd cgi-bin; make)
+
 clean :
 	rm *.o webServ
+	(cd cgi-bin; make clean)

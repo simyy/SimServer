@@ -13,4 +13,8 @@
 int ReturnResponse(int fd, struct ReqInfo* reqInfo);
 int OutputHttpHeaders(int conn, struct ReqInfo* reqinfo);
 
+int servDynamic(int fd, struct ReqInfo* reqInfo);
+int getDynamic(int fd, struct ReqInfo* reqInfo);
+int postDynamic(int fd, struct ReqInfo* reqInfo);
+
 #endif

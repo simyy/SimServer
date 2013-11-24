@@ -9,6 +9,7 @@
 #include "RespModule.h"
 #include "ReqModule.h"
 #include "pool.h"
+#include "Util.h"
 
 void handleRequest(int fd)
 {
@@ -18,13 +19,18 @@ void handleRequest(int fd)
 	m_pool = createPool(500);
 
 	struct ReqInfo* reqInfo;
-	//reqInfo = (struct ReqInfo*)malloc(sizeof(struct ReqInfo));
 	reqInfo = (struct ReqInfo*)palloc(m_pool, sizeof(struct ReqInfo));
 	InitReqInfo(reqInfo);
 
 	GetReqContent(fd, reqInfo, m_pool);
 	printf("status: %d\n", reqInfo->status);
+	writeLog(reqInfo->resource);
 	printf("recv buffer: %s\n", reqInfo->resource);
+
+	if(reqInfo->pageType == STATIC)
+		printf("static page..\n");
+	else
+		printf("dynamic page..\n");
 	ReturnResponse(fd, reqInfo);
 
 	destroyPool(m_pool);

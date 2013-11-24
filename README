@@ -11,6 +11,10 @@ same time.
 
 In program, including:
 ../
+cgi-bin/
+--Makefile
+--getAuth.c
+--postAuth.c
 README
 Makefile
 webServ.c
@@ -20,6 +24,8 @@ Util.h
 Util.c
 pool.h
 pool.c
+log.c
+log.h
 daemon.c
 ReqModule.h
 ReqModule.c
@@ -40,4 +46,7 @@ clean unsource file:
 1.add memory pool function.
 2.fix bug in pool.		
 2013/11/21 :
- add a function of linux daemon process.	
+ add a function of linux daemon process.
+2013/11/24 :
+1. add log function.
+2. add cgi, but has error.	

@@ -24,6 +24,10 @@ int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo, struct pool* m_pool)
 	static int firstHeader = 1;
 	//printf("%s\n", buffer);	
 	
+	if(strstr(buffer, "cgi-bin")){
+		reqInfo->pageType = DYNAMIC;
+	}
+
 	if(firstHeader == 1){
 	/* Get request method */
 	if(!strncmp(buffer, "GET ", 4)){

@@ -7,6 +7,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "Util.h"
 
@@ -17,6 +18,8 @@ void InitReqInfo(struct ReqInfo* reqInfo)
 	reqInfo->type     = SIMPLE;
 	reqInfo->resource = NULL;
 	reqInfo->status   = 200;
+
+	reqInfo->pageType = STATIC;
 }
 
 void FreeReqInfo(struct ReqInfo* reqInfo)
@@ -36,4 +39,11 @@ void Trim(char* buffer)
 	while(!isalnum(buffer[n]) && n >= 0){
 		buffer[n--] == '\0';
 	}
+}
+
+int Pipe(int pipefd[2])
+{
+	if(pipe(pipefd) == -1)
+		return 0;
+	return 1;
 }
