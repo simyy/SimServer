@@ -21,7 +21,6 @@ int ReturnResponse(int fd, struct ReqInfo* reqInfo)
 	int flag;
 	
 	if(reqInfo->pageType == DYNAMIC){
-		OutputHttpHeaders(fd, reqInfo);
 		servDynamic(fd, reqInfo);
 		return 0;
 	}
@@ -81,6 +80,11 @@ int OutputHttpHeaders(int conn, struct ReqInfo* reqinfo)
 
 int servDynamic(int fd, struct ReqInfo* reqInfo)
 {
+	char buffer[200];
+	sprintf(buffer, "HTTP/1.0 %d OK\r\n", reqInfo->status);
+	WriteLine(fd, buffer, strlen(buffer));
+	WriteLine(fd, "Server: WebServ v0.1\r\n", 24);
+
 	if(reqInfo->method == GET)
 		getDynamic(fd, reqInfo);
 	else
@@ -90,13 +94,29 @@ int servDynamic(int fd, struct ReqInfo* reqInfo)
 
 int getDynamic(int fd, struct ReqInfo* reqInfo)
 {
-	
+	char* emptylist[] = { NULL };
+	char* p = strstr(reqInfo->resource, "getAuth?");
+	p += 8;	
+	printf("---execv getAuth----\n");
+	if(fork() == 0){
+		setenv("QUERY_STRING", p, 1);
+		dup2(fd, STDOUT_FILENO);
+		execve("cgi-bin/getAuth", emptylist, environ);
+	}
 	return 0;
 }
 
 int postDynamic(int fd, struct ReqInfo* reqInfo)
 {
-	
+	char* emptylist[] = { NULL };
+	char* p = strstr(reqInfo->resource, "postAuth?");
+	p += 9;	
+	printf("---execv postAuth----\n");
+	if(fork() == 0){
+		setenv("QUERY_STRING", p, 1);
+		dup2(fd, STDOUT_FILENO);
+		execve("cgi-bin/postAuth", emptylist, environ);
+	}
 
 	return 0;
 }

@@ -9,6 +9,8 @@
 #define _UTIL_H
 
 #define ROOT_DIRECTORY "/home/yu/Desktop/webServ/www"
+extern char **environ; /* defined by libc */
+
 
 /* User difined info */
 enum Req_Method {GET, HEAD, UNSUPPORTED};
@@ -19,8 +21,8 @@ struct ReqInfo{
 	enum Req_Method method;
 	enum Req_Type   type;
 
-	int pageType;//0-static 1-dynamic
-	//enum Req_PageType pageType;	
+//	int pageType;//0-static 1-dynamic
+	enum Req_PageType pageType;	
 
 	char*           resource;
 	int             status;

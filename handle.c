@@ -28,8 +28,7 @@ void handleRequest(int fd)
 		writeLog(reqInfo->resource);
 		printf("recv buffer: %s\n", reqInfo->resource);
 
-		//if(reqInfo->pageType == STATIC)
-		if(reqInfo->pageType == 0)
+		if(reqInfo->pageType == STATIC)
 			printf("static page..\n");
 		else
 			printf("dynamic page..\n");

@@ -53,3 +53,5 @@ clean unsource file:
 2013/11/29 :
 1. fix bug in pool.
 2. fix some waring.	
+2013/11/30
+implement cgi get function

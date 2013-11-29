@@ -26,6 +26,5 @@ int main(void)
 	printf("%s", content);
 	
 	fflush(stdout);
-
-	return 0;
+	exit(0);
 }

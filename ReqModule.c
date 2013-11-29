@@ -25,8 +25,8 @@ int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo, struct pool* m_pool)
 	printf("%s\n", buffer);	
 	
 	if(strstr(buffer, "cgi-bin") != NULL){
-		//reqInfo->pageType = DYNAMIC;
-		reqInfo->pageType = 1;
+		reqInfo->pageType = DYNAMIC;
+	//	reqInfo->pageType = 1;
 	}
 
 	if(firstHeader == 1){
