@@ -17,7 +17,7 @@ int main(void)
 		strcpy(password, ++p);
 	}
 
-	sprintf(content, "Welcome ~~~: %s, and your password : \r\n", name, password);
+	sprintf(content, "Welcome ~~~: %s, and your password : %s\r\n", name, password);
 	sprintf(content, "%s\r\n", content);
 	sprintf(content, "%sThanks for your visting !\r\n", content);
 

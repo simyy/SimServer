@@ -4,7 +4,6 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
-#include "Util.h"
 #include "handle.h"
 #include "RespModule.h"
 #include "ReqModule.h"
@@ -13,6 +12,7 @@
 
 void handleRequest(int fd)
 {
+	printf("\n\n===========================\n");
 	struct pool* m_pool;
 	int  ret;
 
@@ -23,16 +23,21 @@ void handleRequest(int fd)
 	InitReqInfo(reqInfo);
 
 	GetReqContent(fd, reqInfo, m_pool);
-	printf("status: %d\n", reqInfo->status);
-	writeLog(reqInfo->resource);
-	printf("recv buffer: %s\n", reqInfo->resource);
+	if(reqInfo->resource != NULL){
+		printf("status: %d\n", reqInfo->status);
+		writeLog(reqInfo->resource);
+		printf("recv buffer: %s\n", reqInfo->resource);
 
-	if(reqInfo->pageType == STATIC)
-		printf("static page..\n");
-	else
-		printf("dynamic page..\n");
-	ReturnResponse(fd, reqInfo);
+		//if(reqInfo->pageType == STATIC)
+		if(reqInfo->pageType == 0)
+			printf("static page..\n");
+		else
+			printf("dynamic page..\n");
+		ReturnResponse(fd, reqInfo);
+	}
 
 	destroyPool(m_pool);
 	close(fd);
+
+	printf("===========================\n\n");
 }

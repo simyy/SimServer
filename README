@@ -49,4 +49,7 @@ clean unsource file:
  add a function of linux daemon process.
 2013/11/24 :
 1. add log function.
-2. add cgi, but has error.	
+2. add cgi, but has error.
+2013/11/29 :
+1. fix bug in pool.
+2. fix some waring.	

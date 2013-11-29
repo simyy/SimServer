@@ -16,14 +16,16 @@ struct pool* createPool(size_t size)
 	struct pool*       pp;
 	struct pool_block* p;
 
-	p =	malloc(size);
+	p =(struct pool_block*)malloc(sizeof(struct pool_block));
 	if( p == NULL){
 		printf("malloc fail .\n");
 		return NULL;
 	}
 
-	p->last = (char*)p;
-	p->end  = (char*)p + size; 
+	p->space = (char*)malloc(size);
+
+	p->last = p->space;
+	p->end  = p->space + size; 
 	p->next = NULL;	
 
 	pp = (struct pool*)malloc(sizeof(struct pool));
@@ -43,15 +45,13 @@ void destroyPool(struct pool* m_pool)
 	p = m_pool->head;
 	for(i = 0; i < m_pool->n; ++i){
 		ptr = p->next;
+		free(p->space);
 		free(p);
 		p = ptr;
 	}
-	/*
-	for(p = m_pool->head; p != NULL; p = ptr){
-		ptr = p->next;
-		free(p);
-	}	
-*/
+	m_pool = NULL;
+	free(m_pool);
+
 	printf("destroy success.\n");
 }
 
@@ -74,12 +74,17 @@ void* palloc(struct pool* m_pool, size_t size)
 			p = p->next;	
 	}
 
-	if(size < MAX_SIZE)	
-		q = (struct pool_block*)malloc(MAX_SIZE);
-	else
-		q = (struct pool_block*)malloc(size);
-	q->last  = (char*)q;
-	q->end   = (char*)q + MAX_SIZE;
+	q = (struct pool_block*)malloc(sizeof(struct pool_block));
+	if(size < MAX_SIZE){	
+		q->space = (char*)malloc(MAX_SIZE);
+		q->last  = q->space;
+		q->end   = (char*)q + MAX_SIZE;
+	}
+	else{
+		q->space = (char*)malloc(size + 1);
+		q->last  = q->space;
+		q->end   = (char*)q + size+1;
+	}
 	q->next = NULL;
 
 	p->next = q;

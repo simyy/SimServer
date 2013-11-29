@@ -22,10 +22,11 @@ int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo, struct pool* m_pool)
 	char* ptr;
 	int   len;
 	static int firstHeader = 1;
-	//printf("%s\n", buffer);	
+	printf("%s\n", buffer);	
 	
-	if(strstr(buffer, "cgi-bin")){
-		reqInfo->pageType = DYNAMIC;
+	if(strstr(buffer, "cgi-bin") != NULL){
+		//reqInfo->pageType = DYNAMIC;
+		reqInfo->pageType = 1;
 	}
 
 	if(firstHeader == 1){
@@ -41,6 +42,7 @@ int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo, struct pool* m_pool)
 	else{
 		reqInfo->method = UNSUPPORTED;
 		reqInfo->status = 501;
+		printf("not supported...\n");
 		return -1;
 	}
 
@@ -91,6 +93,8 @@ int GetReqContent(int fd, struct ReqInfo* reqInfo, struct pool* m_pool)
 	tv.tv_usec = 5;
 
 	do{
+		memset(buffer, '\0', MAX_REQ_LINE);
+
 		/* Reset sets */
 		FD_ZERO(&fds);
 		FD_SET(fd, &fds);
@@ -102,14 +106,17 @@ int GetReqContent(int fd, struct ReqInfo* reqInfo, struct pool* m_pool)
 		}
 		else if(flag == 0){
 			/* timeout */
+			printf("select timeout...\n");
 			return -1;
 		}
 		else{
 			ReadLine(fd, buffer, MAX_REQ_LINE);
 			Trim(buffer);
 
-			if(buffer[0] == '\0')
+			if(buffer[0] == '\0'){
+				printf("buffer[0] == '\0'");
 				break;
+			}
 			if(ParseHttpHeader(buffer, reqInfo, m_pool))
 				break;
 		}

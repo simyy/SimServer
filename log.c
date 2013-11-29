@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <time.h>
+#include <string.h>
 
 #define LOGNAME "access.log"
 

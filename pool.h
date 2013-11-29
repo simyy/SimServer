@@ -14,6 +14,7 @@
 #define MAX_SIZE 1000
 
 struct pool_block{
+	char* space;
 	char* last; /* the last of used space */
 	char* end;  /* the end of pool */
 	struct pool_block* next; /* connect to next pool */

@@ -19,7 +19,8 @@ void InitReqInfo(struct ReqInfo* reqInfo)
 	reqInfo->resource = NULL;
 	reqInfo->status   = 200;
 
-	reqInfo->pageType = STATIC;
+	//reqInfo->pageType = STATIC;
+	reqInfo->pageType = 0;
 }
 
 void FreeReqInfo(struct ReqInfo* reqInfo)

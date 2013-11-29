@@ -19,7 +19,8 @@ struct ReqInfo{
 	enum Req_Method method;
 	enum Req_Type   type;
 
-	enum Req_PageType pageType;	
+	int pageType;//0-static 1-dynamic
+	//enum Req_PageType pageType;	
 
 	char*           resource;
 	int             status;
