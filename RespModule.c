@@ -67,14 +67,16 @@ int ReturnResponse(int fd, struct ReqInfo* reqInfo)
 	return 0;
 }
 
+/* should use write once */
 int OutputHttpHeaders(int conn, struct ReqInfo* reqinfo)
 {
 	char buffer[100];
-	sprintf(buffer, "HTTP/1.0 %d OK\r\n", reqinfo->status);
+	sprintf(buffer, "HTTP/1.0 %d OK\r\nServer: WebServ v0.1\r\nContent-Type: text/html\r\n\r\n", reqinfo->status);
+//	sprintf(buffer, "HTTP/1.0 %d OK\r\n", reqinfo->status);
 	WriteLine(conn, buffer, strlen(buffer));
-	WriteLine(conn, "Server: WebServ v0.1\r\n", 24);
-	WriteLine(conn, "Content-Type: text/html\r\n", 25);
-	WriteLine(conn, "\r\n", 2);
+	//WriteLine(conn, "Server: WebServ v0.1\r\n", 24);
+	//WriteLine(conn, "Content-Type: text/html\r\n", 25);
+	//WriteLine(conn, "\r\n", 2);
 	return 0;
 }
 

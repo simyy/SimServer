@@ -13,6 +13,7 @@
 #include <netinet/in.h>
 #include <sys/wait.h>
 #include <error.h>
+#include <netinet/tcp.h>
 
 #include "handle.h"
 #include "pool.h"
@@ -51,10 +52,18 @@ int main(int argc, char* argv[])
 	int on = 1;
 	ret = setsockopt(serv_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int));
 	if(ret < 0){
-		perror("setsockopt fail !\n");
+		perror("setsockopt Reuse fail !\n");
 		exit(1);
 	}
-	
+
+	/* Disable the Nagle(TCP No Delay) algorithm */
+	/*
+	ret = setsockopt(serv_fd, IPPROTO_TCP, TCP_NODELAY, (char*)&on, sizeof(int));
+	if(ret < 0){
+		perror("setsockopt Nodelay fail !\n");
+		exit(1);
+	}
+	*/
 	/* Bind address to Socket */
 	ret = bind(serv_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 	if(ret < 0){
