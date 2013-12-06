@@ -53,7 +53,6 @@ int ReturnResponse(int fd, struct ReqInfo* reqInfo)
 		close(res_fd);
 
 //	FreeReqInfo(reqInfo);
-
 	
 	/*
 	char content[] = "<head><head><title>index.html</title></head><body>hello world!</body>";
