@@ -13,6 +13,8 @@
 
 #include "ReqModule.h"
 
+static int firstHeader = 1;
+
 /*
  * Parse HTTP header
  *
@@ -21,12 +23,11 @@ int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo, struct pool* m_pool)
 {
 	char* ptr;
 	int   len;
-	static int firstHeader = 1;
+	//static int firstHeader = 1;
 	//printf("%s\n", buffer);	
 	
 	if(strstr(buffer, "cgi-bin") != NULL){
 		reqInfo->pageType = DYNAMIC;
-	//	reqInfo->pageType = 1;
 	}
 
 	if(firstHeader == 1){
@@ -122,6 +123,8 @@ int GetReqContent(int fd, struct ReqInfo* reqInfo, struct pool* m_pool)
 				break;
 		}
 	}while(reqInfo->type != SIMPLE);
+
+	firstHeader = 1;
 
 	return 0;
 }
