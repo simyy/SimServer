@@ -19,10 +19,10 @@
 
 
 #include "event.h"
-#include "../ReqModule.h"
-#include "../RespModule.h"
-#include "../log.h"
-#include "../Util.h"
+#include "ReqModule.h"
+#include "RespModule.h"
+#include "log.h"
+#include "Util.h"
  
 void setnonblocking(int sock)
 {
@@ -69,7 +69,7 @@ int epoll_process(int fd)
 	
 	len = sizeof(struct sockaddr);
 	while(1){
-		nfds = epoll_wait(epfd, events, 1000, 500);
+		nfds = epoll_wait(epfd, events, 512, 500);
 		for(i = 0; i < nfds; ++i){
             if(events[i].data.fd == fd){
 				conn = accept(fd, (struct sockaddr*)&client_addr, (unsigned int*)&len);
@@ -77,26 +77,36 @@ int epoll_process(int fd)
                     perror("accept error!\n");
                         continue;
                 }
-
+				setnonblocking(conn);
                 ev.data.fd = conn;
                 ev.events  = EPOLLIN|EPOLLET;                        
                 epoll_ctl(epfd, EPOLL_CTL_ADD, conn, &ev);
             }
+			else if((events[i].events & EPOLLERR) ||
+					(events[i].events & EPOLLHUP)){
+				close(events[i].data.fd);
+				epoll_ctl(epfd, EPOLL_CTL_ADD, conn, &ev);
+				continue;	
+			}
 			else if(events[i].events&EPOLLIN){
             	/* receive request */                        
 				struct ReqInfo* reqInfo;
                 if((newfd = events[i].data.fd) < 0)
                     continue; 
+				printf("read fd: %d\n", newfd);
 				reqInfo = (struct ReqInfo*)palloc(m_pool, sizeof(struct ReqInfo));
-                
+               	InitReqInfo(reqInfo); 
 				flag = GetReqContent(newfd, reqInfo, m_pool);
 				if(flag != 0){
 					if(flag == -1)
 						printf("select timeout\n");
 					if(flag == 1)
 						printf("select fail\n");
+
 				}
-					
+
+				reqInfo->fd = newfd;
+				ev.data.fd = newfd;	
 				ev.data.ptr = reqInfo;
 				ev.events = EPOLLOUT|EPOLLET;
 				
@@ -106,7 +116,8 @@ int epoll_process(int fd)
              	/* send respost */
             	if((newfd = events[i].data.fd) < 0)
                     continue;
-				struct ReqInfo* reqInfo = events[i].data.ptr;
+				printf("write fd: %d\n", newfd);
+				struct ReqInfo* reqInfo = (struct ReqInfo*)events[i].data.ptr;
 				if(reqInfo->resource != NULL){
 					printf("status: %d\n", reqInfo->status);
 					writeLog(reqInfo->resource);
@@ -116,10 +127,9 @@ int epoll_process(int fd)
 						printf("static page...\n");
 					else
 						printf("dynamic page...\n");
-
-					ReturnResponse(newfd, reqInfo);
+					ReturnResponse(reqInfo->fd, reqInfo);
 				}
-
+				ev.data.fd = -1;
 				epoll_ctl(epfd, EPOLL_CTL_DEL, newfd, &ev);
             }
 

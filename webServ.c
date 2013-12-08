@@ -18,18 +18,23 @@
 #include "handle.h"
 #include "pool.h"
 #include "Util.h"
+#include "event.h"
 
 #define PORT 9000
 #define LISTEN_NUM 1024
 
+#define USEEPOLL 1 
+#define USEDAEMON 0
+
 int main(int argc, char* argv[])
 {
+	int i;
 	int serv_fd;
 	int client_fd;
-
 	int ret;
 
-	//init_daemon();
+	if(USEDAEMON)
+		init_daemon();
 
 	pid_t pid;
 	struct sockaddr_in serv_addr;
@@ -77,6 +82,29 @@ int main(int argc, char* argv[])
 		perror("listen fail !\n");
 		exit(1);
 	}
+
+	if(USEEPOLL){
+/*
+		for(i = 0; i < 2; ++i){
+			pid = fork();
+
+			switch(pid){
+			case -1:
+				printf("fork error!\n");
+				return -1;
+			case 0:
+				epoll_process(serv_fd);
+			default:
+				printf("process %d forked\n", pid);
+				break;
+
+			}
+		}
+*/		
+		setnonblocking(serv_fd);
+		epoll_process(serv_fd);
+		return 0;
+	}
 	
 	/* Loop to accept and handle connections */
 	while(1){
@@ -85,7 +113,7 @@ int main(int argc, char* argv[])
 			perror("accept fail !\n");
 			continue;
 		}
-		
+	/*	
 		pid = fork();
 		if(pid == 0){
 			close(serv_fd);
@@ -95,9 +123,10 @@ int main(int argc, char* argv[])
 			
 		close(client_fd);
 		waitpid(-1, NULL, WNOHANG);
-
-	//	handleRequest(client_fd);	
+*/
+		handleRequest(client_fd);	
 	}
 
+	close(serv_fd);
 	return 0;
 }

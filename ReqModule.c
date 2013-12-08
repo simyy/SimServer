@@ -22,7 +22,7 @@ int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo, struct pool* m_pool)
 	char* ptr;
 	int   len;
 	static int firstHeader = 1;
-	printf("%s\n", buffer);	
+	//printf("%s\n", buffer);	
 	
 	if(strstr(buffer, "cgi-bin") != NULL){
 		reqInfo->pageType = DYNAMIC;
@@ -106,15 +106,16 @@ int GetReqContent(int fd, struct ReqInfo* reqInfo, struct pool* m_pool)
 		}
 		else if(flag == 0){
 			/* timeout */
-			printf("select timeout...\n");
+			//printf("select timeout...\n");
 			return -1;
 		}
+	
 		else{
 			ReadLine(fd, buffer, MAX_REQ_LINE);
 			Trim(buffer);
 
 			if(buffer[0] == '\0'){
-				printf("buffer[0] == '\0'");
+			//	printf("buffer[0] == '0'\n");
 				break;
 			}
 			if(ParseHttpHeader(buffer, reqInfo, m_pool))

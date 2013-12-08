@@ -26,6 +26,8 @@ struct ReqInfo{
 
 	char*           resource;
 	int             status;
+
+	int 			fd;
 };
 /* Init and Free request info */
 void InitReqInfo(struct ReqInfo* reqInfo);
