@@ -11,6 +11,11 @@ same time.
 
 In program, including:
 ../
+event/
+--Makefile
+--event.h
+--epoll_module.c
+--select_module.c
 cgi-bin/
 --Makefile
 --getAuth.c
