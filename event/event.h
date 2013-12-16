@@ -7,13 +7,18 @@
  *
  */
  
- #ifndef _EVENT_H
- #define _EVENT_H
+#ifndef _EVENT_H
+#define _EVENT_H
+
+//#define FD_SETSIZE 1024
 
 /* set blocking  */
 void setnonblocking(int sock);
 
- /* epoll process  */
+/* epoll process  */
 int epoll_process(int fd);
- 
- #endif
+
+/* select process */
+int select_process(int fd); 
+
+#endif

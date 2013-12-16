@@ -1,7 +1,7 @@
-webServ : webServ.o handle.o ReqModule.o RespModule.o Resource.o Util.o pool.o daemon.o cgi log.o epoll_module.o 
-	gcc -g -o webServ webServ.o handle.o ReqModule.o RespModule.o Resource.o  Util.o pool.o daemon.o log.o epoll_module.o
+webServ : event webServ.o handle.o ReqModule.o RespModule.o Resource.o Util.o pool.o daemon.o cgi log.o 
+	gcc -g -o webServ webServ.o handle.o ReqModule.o RespModule.o Resource.o  Util.o pool.o daemon.o log.o event/epoll_module.o event/select_module.o
 
-webServ.o : webServ.c handle.h event.h
+webServ.o : webServ.c handle.h event/event.h
 	gcc -g -c  webServ.c 
 
 handle.o : handle.c handle.h Util.h RespModule.h ReqModule.h
@@ -31,9 +31,11 @@ log.o : log.c
 cgi:
 	(cd cgi-bin; make)
 
-epoll_module.o : epoll_module.c event.h 
-	gcc -g -c epoll_module.c
+.PHONY : event
+event :  
+	(cd event; make)
 
 clean :
 	rm *.o webServ 
 	(cd cgi-bin; make clean)
+	(cd event; make clean)

@@ -18,12 +18,13 @@
 #include "handle.h"
 #include "pool.h"
 #include "Util.h"
-#include "event.h"
+#include "event/event.h"
 
 #define PORT 9000
 #define LISTEN_NUM 1024
 
-#define USEEPOLL 1 
+#define USEEPOLL 0 
+#define USESELECT 1
 #define USEDAEMON 0
 
 int main(int argc, char* argv[])
@@ -81,6 +82,11 @@ int main(int argc, char* argv[])
 	if(ret < 0){
 		perror("listen fail !\n");
 		exit(1);
+	}
+
+	if(USESELECT){
+		select_process(serv_fd);
+		return 0;
 	}
 
 	if(USEEPOLL){

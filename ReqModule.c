@@ -90,8 +90,8 @@ int GetReqContent(int fd, struct ReqInfo* reqInfo, struct pool* m_pool)
 	struct timeval tv;
 
 	/* Set timeout*/
-	tv.tv_sec  = 5;
-	tv.tv_usec = 5;
+	tv.tv_sec  = 2;
+	tv.tv_usec = 0;
 
 	do{
 		memset(buffer, '\0', MAX_REQ_LINE);
