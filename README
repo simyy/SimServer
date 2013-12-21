@@ -16,6 +16,7 @@ event/
 --event.h
 --epoll_module.c
 --select_module.c
+--poll_module.c
 cgi-bin/
 --Makefile
 --getAuth.c
@@ -67,3 +68,5 @@ add event
 2013/12/16
 1. add select module and fix select module
 2. move all event module to event files
+2013/12/21
+add poll module

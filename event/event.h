@@ -21,4 +21,7 @@ int epoll_process(int fd);
 /* select process */
 int select_process(int fd); 
 
+/* poll process */
+int poll_process(int fd);
+
 #endif

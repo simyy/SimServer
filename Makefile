@@ -1,5 +1,5 @@
 webServ : event webServ.o handle.o ReqModule.o RespModule.o Resource.o Util.o pool.o daemon.o cgi log.o 
-	gcc -g -o webServ webServ.o handle.o ReqModule.o RespModule.o Resource.o  Util.o pool.o daemon.o log.o event/epoll_module.o event/select_module.o
+	gcc -g -o webServ webServ.o handle.o ReqModule.o RespModule.o Resource.o  Util.o pool.o daemon.o log.o event/epoll_module.o event/select_module.o event/poll_module.o
 
 webServ.o : webServ.c handle.h event/event.h
 	gcc -g -c  webServ.c 

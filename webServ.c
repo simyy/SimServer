@@ -23,8 +23,10 @@
 #define PORT 9000
 #define LISTEN_NUM 1024
 
-#define USEEPOLL 0 
-#define USESELECT 1
+#define USEEPOLL  0 
+#define USESELECT 0
+#define USEPOLL   1 
+
 #define USEDAEMON 0
 
 int main(int argc, char* argv[])
@@ -84,11 +86,19 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
+	/***** use select module ******/
 	if(USESELECT){
 		select_process(serv_fd);
 		return 0;
 	}
 
+	/***** use poll module ********/
+	if(USEPOLL){
+		poll_process(serv_fd);
+		return 0;
+	}
+
+	/***** use epoll module *******/
 	if(USEEPOLL){
 /*
 		for(i = 0; i < 2; ++i){
@@ -112,6 +122,7 @@ int main(int argc, char* argv[])
 		return 0;
 	}
 	
+	/**** normal module *********/
 	/* Loop to accept and handle connections */
 	while(1){
 		client_fd = accept(serv_fd, (struct sockaddr*)&client_addr, &len);
