@@ -1,4 +1,4 @@
-#simple-web-server
+#yServer
 >This is a simple web server writing in C on Linux.
 >Build in 2013, Copyright Xianda Yu, Based on Paul Griffiths 1999.
 >Using socket to build a web server in c, and multiprocess to handle with some requests at the same time.
