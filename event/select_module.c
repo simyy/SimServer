@@ -41,7 +41,7 @@ int select_process(int fd)
 
 	struct pool *m_pool;
 	
-	m_pool = createPool(2048);
+	//m_pool = createPool(2048);
 
 	len = sizeof(struct sockaddr);
 
@@ -89,10 +89,12 @@ int select_process(int fd)
 
 			if(FD_ISSET(sockfd, &rset)){
 				struct ReqInfo* reqInfo;
-				reqInfo = (struct ReqInfo*)palloc(m_pool, sizeof(struct ReqInfo));
+				//reqInfo = (struct ReqInfo*)palloc(m_pool, sizeof(struct ReqInfo));
+				reqInfo = (struct ReqInfo*)malloc(sizeof(struct ReqInfo));
 				
 				InitReqInfo(reqInfo);
-				flag = GetReqContent(sockfd, reqInfo, m_pool);
+				//flag = GetReqContent(sockfd, reqInfo, m_pool);
+				flag = GetReqContent(sockfd, reqInfo);
 				if(flag != 0){
 					if(flag == -1)
 						printf("select timeout\n");

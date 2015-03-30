@@ -8,7 +8,7 @@
 #ifndef _UTIL_H
 #define _UTIL_H
 
-#define ROOT_DIRECTORY "/home/yu/Desktop/webServ/www"
+#define ROOT_DIRECTORY "/home/y/simple-web-server/SimServer/www"
 extern char **environ; /* defined by libc */
 
 
@@ -29,6 +29,7 @@ struct ReqInfo{
 
 	int 			fd;
 };
+
 /* Init and Free request info */
 void InitReqInfo(struct ReqInfo* reqInfo);
 void FreeReqInfo(struct ReqInfo* reqInfo);

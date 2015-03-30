@@ -12,7 +12,7 @@
 /* get time */
 void getTime(char* time);
 
-/*  */
+/* write log to access.log */
 void writeLog(char* buf);
 
 #endif 

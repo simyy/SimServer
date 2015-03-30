@@ -29,7 +29,6 @@ void FreeReqInfo(struct ReqInfo* reqInfo)
 	}
 }	
 
-/*  */
 void Trim(char* buffer)
 {
 	int n = 0;

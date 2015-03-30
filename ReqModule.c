@@ -19,7 +19,8 @@ static int firstHeader = 1;
  * Parse HTTP header
  *
  */
-int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo, struct pool* m_pool)
+//int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo, struct pool* m_pool)
+int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo)
 {
 	char* ptr;
 	int   len;
@@ -60,8 +61,9 @@ int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo, struct pool* m_pool)
 	}
 	
 	/* alloc resource space */
-	reqInfo->resource = palloc(m_pool, len+1);
+	//reqInfo->resource = palloc(m_pool, len+1);
 	//reqInfo->resource = calloc(len+1, sizeof(char));
+	reqInfo->resource = malloc(len+1*sizeof(char));
 	strncpy(reqInfo->resource, buffer, len);
 	
 	/* Get HTTP version */
@@ -81,7 +83,8 @@ int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo, struct pool* m_pool)
  * Get request content.
  * 
  */
-int GetReqContent(int fd, struct ReqInfo* reqInfo, struct pool* m_pool)
+//int GetReqContent(int fd, struct ReqInfo* reqInfo, struct pool* m_pool)
+int GetReqContent(int fd, struct ReqInfo* reqInfo)
 {
 	char buffer[MAX_REQ_LINE];
 	int  flag;
@@ -107,23 +110,26 @@ int GetReqContent(int fd, struct ReqInfo* reqInfo, struct pool* m_pool)
 		}
 		else if(flag == 0){
 			/* timeout */
-			//printf("select timeout...\n");
+			printf("select timeout...\n");
 			return -1;
 		}
 	
 		else{
 			ReadLine(fd, buffer, MAX_REQ_LINE);
 			Trim(buffer);
+            printf("recv\t%s", buffer);
 
-			if(buffer[0] == '\0'){
-			//	printf("buffer[0] == '0'\n");
+			if((buffer[0] == '\r')&&(buffer[1] == '\n')){
+				printf("buffer[0] == '0'\n");
 				break;
 			}
-			if(ParseHttpHeader(buffer, reqInfo, m_pool))
+			//if(ParseHttpHeader(buffer, reqInfo, m_pool))
+			if(ParseHttpHeader(buffer, reqInfo))
 				break;
 		}
 	}while(reqInfo->type != SIMPLE);
 
+    printf("1111111111111111111111111111111\n");
 	firstHeader = 1;
 
 	return 0;

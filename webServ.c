@@ -25,12 +25,13 @@
 
 #define USEEPOLL  0 
 #define USESELECT 0
-#define USEPOLL   1 
+#define USEPOLL   0 
 
 #define USEDAEMON 0
 
 int main(int argc, char* argv[])
 {
+    int n = 1;
 	int i;
 	int serv_fd;
 	int client_fd;
@@ -126,6 +127,8 @@ int main(int argc, char* argv[])
 	/* Loop to accept and handle connections */
 	while(1){
 		client_fd = accept(serv_fd, (struct sockaddr*)&client_addr, &len);
+        printf("accept %s\n", &n);
+        n++;
 		if(client_fd < 0){
 			perror("accept fail !\n");
 			continue;

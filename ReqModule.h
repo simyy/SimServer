@@ -15,8 +15,10 @@
 
 
 /* The functions for request handle */
-int     ParseHttpHeader(char *buffer, struct ReqInfo* reqInfo, struct pool* m_pool);
-int     GetReqContent(int fd, struct ReqInfo* reqInfo, struct pool* m_pool);
+//int     ParseHttpHeader(char *buffer, struct ReqInfo* reqInfo, struct pool* m_pool);
+int     ParseHttpHeader(char *buffer, struct ReqInfo* reqInfo);
+//int     GetReqContent(int fd, struct ReqInfo* reqInfo, struct pool* m_pool);
+int     GetReqContent(int fd, struct ReqInfo* reqInfo);
 ssize_t ReadLine(int fd, char* buffer, size_t len);
 
 #endif

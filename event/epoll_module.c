@@ -56,7 +56,7 @@ int epoll_process(int fd)
 	struct epoll_event events[1024];
 	struct sockaddr_in client_addr;
 
-	m_pool = createPool(2048);
+	//m_pool = createPool(2048);
 	epfd = epoll_create(1024);
 	
 	//close(fd);
@@ -95,9 +95,11 @@ int epoll_process(int fd)
                 if((newfd = events[i].data.fd) < 0)
                     continue; 
 				printf("read fd: %d\n", newfd);
-				reqInfo = (struct ReqInfo*)palloc(m_pool, sizeof(struct ReqInfo));
+				//reqInfo = (struct ReqInfo*)palloc(m_pool, sizeof(struct ReqInfo));
+				reqInfo = (struct ReqInfo*)malloc(sizeof(struct ReqInfo));
                	InitReqInfo(reqInfo); 
-				flag = GetReqContent(newfd, reqInfo, m_pool);
+				//flag = GetReqContent(newfd, reqInfo, m_pool);
+				flag = GetReqContent(newfd, reqInfo);
 				if(flag != 0){
 					if(flag == -1)
 						printf("select timeout\n");
@@ -138,6 +140,6 @@ int epoll_process(int fd)
 		}
 	}
 
-	destroyPool(m_pool);
+	//destroyPool(m_pool);
 	return 0;
 }
