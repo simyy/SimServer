@@ -39,7 +39,7 @@ int select_process(int fd)
 	int client[FD_SETSIZE];
 	struct sockaddr_in client_addr;
 
-	struct pool *m_pool;
+	//struct pool *m_pool;
 	
 	//m_pool = createPool(2048);
 

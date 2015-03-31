@@ -21,9 +21,9 @@
 #include "event/event.h"
 
 #define PORT 9000
-#define LISTEN_NUM 1024
+#define LISTEN_NUM 2048 
 
-#define USEEPOLL  0 
+#define USEEPOLL  1 
 #define USESELECT 0
 #define USEPOLL   0 
 
@@ -31,19 +31,19 @@
 
 int main(int argc, char* argv[])
 {
-    int n = 1;
-	int i;
-	int serv_fd;
-	int client_fd;
-	int ret;
-
-	if(USEDAEMON)
-		init_daemon();
-
-	pid_t pid;
+	int    i;
+	int    ret;
+	int    serv_fd;
+	int    client_fd;
+	pid_t  pid;
 	struct sockaddr_in serv_addr;
 	struct sockaddr_in client_addr;
 	int    len = sizeof(struct sockaddr_in);
+
+    /* as a daemon process*/
+	if(USEDAEMON)
+		init_daemon();
+
 	/* Create Socket */
 	serv_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if(serv_fd < 0){
@@ -66,13 +66,12 @@ int main(int argc, char* argv[])
 	}
 
 	/* Disable the Nagle(TCP No Delay) algorithm */
-	/*
 	ret = setsockopt(serv_fd, IPPROTO_TCP, TCP_NODELAY, (char*)&on, sizeof(int));
 	if(ret < 0){
 		perror("setsockopt Nodelay fail !\n");
 		exit(1);
 	}
-	*/
+
 	/* Bind address to Socket */
 	ret = bind(serv_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
 	if(ret < 0){
@@ -87,21 +86,19 @@ int main(int argc, char* argv[])
 		exit(1);
 	}
 
-	/***** use select module ******/
+    /* select a event module */
 	if(USESELECT){
+	    // use select module
 		select_process(serv_fd);
 		return 0;
 	}
-
-	/***** use poll module ********/
-	if(USEPOLL){
+    else if(USEPOLL){
+	    // use poll module 
 		poll_process(serv_fd);
 		return 0;
 	}
-
-	/***** use epoll module *******/
-	if(USEEPOLL){
-/*
+    else if(USEEPOLL){
+	    // use epoll module 
 		for(i = 0; i < 2; ++i){
 			pid = fork();
 
@@ -117,36 +114,30 @@ int main(int argc, char* argv[])
 
 			}
 		}
-*/		
 		setnonblocking(serv_fd);
 		epoll_process(serv_fd);
 		return 0;
 	}
-	
-	/**** normal module *********/
-	/* Loop to accept and handle connections */
-	while(1){
-		client_fd = accept(serv_fd, (struct sockaddr*)&client_addr, &len);
-        printf("accept %s\n", &n);
-        n++;
-		if(client_fd < 0){
-			perror("accept fail !\n");
-			continue;
-		}
-	/*	
-		pid = fork();
-		if(pid == 0){
-			close(serv_fd);
-			handleRequest(client_fd);
-			exit(0);
-		}
-			
-		close(client_fd);
-		waitpid(-1, NULL, WNOHANG);
-*/
-		handleRequest(client_fd);	
-	}
-
+    else {
+	    // normal module
+	    while(1){
+	    	client_fd = accept(serv_fd, (struct sockaddr*)&client_addr, &len);
+	    	if(client_fd < 0){
+	    		perror("accept fail !\n");
+	    		continue;
+	    	}
+	    	pid = fork();
+	    	if(pid == 0){
+	    		close(serv_fd);
+                printf("1111111111111111111111111\t%d", getpid());
+	    		handleRequest(client_fd);
+	    		exit(0);
+	    	}
+	    	close(client_fd);
+	    	waitpid(-1, NULL, WNOHANG);
+	    	//handleRequest(client_fd);	
+	    }
+    }
 	close(serv_fd);
 	return 0;
 }

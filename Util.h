@@ -8,7 +8,7 @@
 #ifndef _UTIL_H
 #define _UTIL_H
 
-#define ROOT_DIRECTORY "/home/y/simple-web-server/SimServer/www"
+#define ROOT_DIRECTORY "/home/y/SimServer/www"
 extern char **environ; /* defined by libc */
 
 
