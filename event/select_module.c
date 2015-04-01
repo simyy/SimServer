@@ -112,6 +112,7 @@ int select_process(int fd)
 					else
 						printf("dynamic page...\n");
 					ReturnResponse(sockfd, reqInfo);
+                    printf("recvvvvvvvvvvvvvv pid:\t%d\n", getpid());
 				}
 				
 				close(sockfd);

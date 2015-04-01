@@ -22,7 +22,8 @@
 #include "../log.h"
 #include "../Util.h"
 
-#define POLL_SIZE 1024
+//#define POLL_SIZE 1024
+#define POLL_SIZE 10 
 
 int poll_process(int fd)
 {
@@ -45,16 +46,27 @@ int poll_process(int fd)
 	client[0].fd = fd;
 	client[0].events = POLLIN;
 
-	for(i = 0; i < POLL_SIZE; ++i){
+	for(i = 1; i < POLL_SIZE; ++i){ //don't rewrite on client[1]
 		client[i].fd = -1;
 	}
 
-	max = fd + 1;
+	max = 0;
 	len = sizeof(struct sockaddr);
 	while(1){
-		nready = poll(client, max+1, 0);
+		nready = poll(client, max+1, 1000);
+        if (nready < 0) {
+            perror("poll error!\n");
+            break;
+        }
+        //else if (nready == 0) {
+        //    perror("time out\n");
+        //    continue;
+        //}
 		if(client[0].revents & POLLIN){
 			conn = accept(fd, (struct sockaddr*)&client_addr, (unsigned int*)&len);
+            if (conn == -1) {
+                perror("accept error");
+            }
 			
 			for(i = 1; i < POLL_SIZE; ++i){
 				if(client[i].fd < 0){
@@ -108,8 +120,8 @@ int poll_process(int fd)
 				close(sockfd);
 				client[i].fd = -1;
 
-				if(--nready <= 0)
-					break;
+			    if(--nready <= 0)
+				    continue;
 			}
 		}
 	}

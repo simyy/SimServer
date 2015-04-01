@@ -23,9 +23,11 @@
 #define PORT 9000
 #define LISTEN_NUM 2048 
 
-#define USEEPOLL  1 
-#define USESELECT 0
-#define USEPOLL   0 
+#define USEEPOLL  0 
+#define USESELECT 0 
+#define USEPOLL   1 
+
+#define WORKERS   2
 
 #define USEDAEMON 0
 
@@ -99,7 +101,7 @@ int main(int argc, char* argv[])
 	}
     else if(USEEPOLL){
 	    // use epoll module 
-		for(i = 0; i < 2; ++i){
+		for(i = 0; i < WORKERS-1; ++i){
 			pid = fork();
 
 			switch(pid){
@@ -129,7 +131,7 @@ int main(int argc, char* argv[])
 	    	pid = fork();
 	    	if(pid == 0){
 	    		close(serv_fd);
-                printf("1111111111111111111111111\t%d", getpid());
+                printf("process %d forked\n", getpid());
 	    		handleRequest(client_fd);
 	    		exit(0);
 	    	}
