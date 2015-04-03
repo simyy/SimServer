@@ -49,7 +49,6 @@ int epoll_process(int fd)
 	int flag;
 	int newfd;
 	int conn;
-    pid_t pid;
 	
 	char buffer[1024];
 	struct pool *m_pool;
@@ -92,24 +91,55 @@ int epoll_process(int fd)
 			}
 			else if(events[i].events&EPOLLIN){
             	/* receive request */                        
+				struct ReqInfo* reqInfo;
                 if((newfd = events[i].data.fd) < 0)
                     continue; 
-	    	    pid = fork();
-	    	    if(pid == 0){
-	    	    	close(fd);
-                    printf("process %d forked\n", getpid());
-	    	    	handleRequest(newfd);
-	    	    	exit(0);
-	    	    }
-	    	    close(newfd);
-	    	    waitpid(-1, NULL, WNOHANG);
+				printf("read fd: %d\n", newfd);
+				//reqInfo = (struct ReqInfo*)palloc(m_pool, sizeof(struct ReqInfo));
+				reqInfo = (struct ReqInfo*)malloc(sizeof(struct ReqInfo));
+               	InitReqInfo(reqInfo); 
+				//flag = GetReqContent(newfd, reqInfo, m_pool);
+				flag = GetReqContent(newfd, reqInfo);
+				if(flag != 0){
+					if(flag == -1)
+						printf("select timeout\n");
+					if(flag == 1)
+						printf("select fail\n");
+
+				}
+
+				reqInfo->fd = newfd;
+				ev.data.fd = newfd;	
+				ev.data.ptr = reqInfo;
+				ev.events = EPOLLOUT|EPOLLET;
 				
+				epoll_ctl(epfd, EPOLL_CTL_MOD, newfd, &ev);        
+            }
+		   	else if(events[i].events&EPOLLOUT){
+             	/* send respost */
+            	if((newfd = events[i].data.fd) < 0)
+                    continue;
+				printf("write fd: %d\n", newfd);
+				struct ReqInfo* reqInfo = (struct ReqInfo*)events[i].data.ptr;
+				if(reqInfo->resource != NULL){
+					printf("status: %d\n", reqInfo->status);
+					writeLog(reqInfo->resource);
+					printf("recv buffer: %s\n", reqInfo->resource);
+					
+					if(reqInfo->pageType == STATIC)
+						printf("static page...\n");
+					else
+						printf("dynamic page...\n");
+					ReturnResponse(reqInfo->fd, reqInfo);
+					close(reqInfo->fd);
+				}
 				ev.data.fd = -1;
 				epoll_ctl(epfd, EPOLL_CTL_DEL, newfd, &ev);
             }
 
 		}
 	}
+
 	//destroyPool(m_pool);
 	return 0;
 }

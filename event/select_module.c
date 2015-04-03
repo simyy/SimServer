@@ -34,6 +34,7 @@ int select_process(int fd)
 	int maxfd;
 	int sockfd;
 	int nready;
+    pid_t pid;
 	 
 	fd_set rset, allset;
 	int client[FD_SETSIZE];
@@ -88,34 +89,16 @@ int select_process(int fd)
 				continue;
 
 			if(FD_ISSET(sockfd, &rset)){
-				struct ReqInfo* reqInfo;
-				//reqInfo = (struct ReqInfo*)palloc(m_pool, sizeof(struct ReqInfo));
-				reqInfo = (struct ReqInfo*)malloc(sizeof(struct ReqInfo));
-				
-				InitReqInfo(reqInfo);
-				//flag = GetReqContent(sockfd, reqInfo, m_pool);
-				flag = GetReqContent(sockfd, reqInfo);
-				if(flag != 0){
-					if(flag == -1)
-						printf("select timeout\n");
-					if(flag == 1)
-						printf("select fail\n");
-				}
+                pid = fork();
+                if (pid == 0) {
+                    close(fd);
+                    printf("process %d forked\n", getpid());
+	    		    handleRequest(sockfd);
+	    		    exit(0);
+                }
+                close(sockfd);
+	    	    waitpid(-1, NULL, WNOHANG);
 
-				if(reqInfo->resource != NULL){
-					printf("status: %d\n", reqInfo->status);
-					writeLog(reqInfo->resource);
-					printf("recv buffer: %s\n", reqInfo->resource);
-					
-					if(reqInfo->pageType == STATIC)
-						printf("static page...\n");
-					else
-						printf("dynamic page...\n");
-					ReturnResponse(sockfd, reqInfo);
-                    printf("recvvvvvvvvvvvvvv pid:\t%d\n", getpid());
-				}
-				
-				close(sockfd);
 				FD_CLR(sockfd, &allset);	
 
 				if(--nready <= 0)

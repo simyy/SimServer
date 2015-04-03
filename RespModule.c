@@ -52,6 +52,11 @@ int ReturnResponse(int fd, struct ReqInfo* reqInfo)
 	if(res_fd > 0)
 		close(res_fd);
 
+    if (reqInfo != NULL) {
+        free(reqInfo);
+        reqInfo = NULL;
+    }
+
 //	FreeReqInfo(reqInfo);
 	
 	/*

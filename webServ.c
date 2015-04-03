@@ -23,9 +23,9 @@
 #define PORT 9000
 #define LISTEN_NUM 2048 
 
-#define USEEPOLL  0 
+#define USEEPOLL  1 
 #define USESELECT 0 
-#define USEPOLL   1 
+#define USEPOLL   0 
 
 #define WORKERS   2
 
@@ -91,16 +91,19 @@ int main(int argc, char* argv[])
     /* select a event module */
 	if(USESELECT){
 	    // use select module
+        printf("select\n");
 		select_process(serv_fd);
 		return 0;
 	}
     else if(USEPOLL){
 	    // use poll module 
+        printf("poll\n");
 		poll_process(serv_fd);
 		return 0;
 	}
     else if(USEEPOLL){
 	    // use epoll module 
+        printf("epoll\n");
 		for(i = 0; i < WORKERS-1; ++i){
 			pid = fork();
 
