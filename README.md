@@ -36,3 +36,6 @@ add event
   *  move all event module to event files
 *  2013/12/21
   *  add poll module
+*  2015/3/1
+  * fix bug in pool
+  * make all event module running in processes
