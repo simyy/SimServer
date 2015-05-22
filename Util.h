@@ -40,7 +40,7 @@ void Trim(char* buffer);
 /* linux daemon process */
 void init_daemon();
 
-/*  */
+/* Linux pipe */
 int Pipe(int pipefd[2]);
 
 #endif
