@@ -30,7 +30,7 @@ make clean
 *  2013/12/3
   *  fix bug in cgi
 *  2013/12/6
-add event
+  *  add event
 *  2013/12/16
   *  add select module and fix select module
   *  move all event module to event files
@@ -39,3 +39,5 @@ add event
 *  2015/3/1
   * fix bug in pool
   * make all event module running in processes
+*  2017/3/9
+  * update code

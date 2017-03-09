@@ -17,17 +17,16 @@ int ReturnResponse(int fd, struct ReqInfo* reqInfo)
 {
 	char c;
 	int  res_fd;
-
 	int flag;
 	
-	if(reqInfo->pageType == DYNAMIC){
+	if (reqInfo->pageType == DYNAMIC) {
 		servDynamic(fd, reqInfo);
 		return 0;
 	}
 
 	/*  */
 	res_fd = CheckResource(reqInfo); 
-	if(reqInfo->status == 200 && res_fd < 0){
+	if (reqInfo->status == 200 && res_fd < 0) {
 		if(errno == EACCES)
 			/* Pemission denied */
 			reqInfo->status = 401;
@@ -36,10 +35,10 @@ int ReturnResponse(int fd, struct ReqInfo* reqInfo)
 			reqInfo->status = 404;
 	}
 	
-	if(reqInfo->type == FULL)
+	if (reqInfo->type == FULL)
 		OutputHttpHeaders(fd, reqInfo);
 	
-	if(reqInfo->status == 200){
+	if (reqInfo->status == 200) {
 		flag = ReturnResource(fd, res_fd, reqInfo);
 		if(flag == -1){
 			perror("Return Resouce fail !\n");
@@ -49,7 +48,7 @@ int ReturnResponse(int fd, struct ReqInfo* reqInfo)
 	else
 		ReturnErrorMsg(fd, reqInfo);
 
-	if(res_fd > 0)
+	if (res_fd > 0)
 		close(res_fd);
 
     if (reqInfo != NULL) {

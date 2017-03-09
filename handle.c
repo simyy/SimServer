@@ -25,7 +25,7 @@ void handleRequest(int fd)
 
 	//GetReqContent(fd, reqInfo, m_pool);
 	GetReqContent(fd, reqInfo);
-	if(reqInfo->resource != NULL){
+	if (reqInfo->resource != NULL) {
 		printf("status: %d\n", reqInfo->status);
 		writeLog(reqInfo->resource);
 		printf("recv buffer: %s\n", reqInfo->resource);

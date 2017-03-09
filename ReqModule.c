@@ -27,21 +27,21 @@ int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo)
 	//static int firstHeader = 1;
 	//printf("%s\n", buffer);	
 	
-	if(strstr(buffer, "cgi-bin") != NULL){
+	if (strstr(buffer, "cgi-bin") != NULL) {
 		reqInfo->pageType = DYNAMIC;
 	}
 
-	if(firstHeader == 1){
+	if (firstHeader == 1) {
 	/* Get request method */
 	if(!strncmp(buffer, "GET ", 4)){
 		reqInfo->method = GET;
 		buffer += 4;
 	}
-	else if(!strncmp(buffer, "HEAD ", 5)){
+	else if (!strncmp(buffer, "HEAD ", 5)) {
 		reqInfo->method = HEAD;
 		buffer += 5;
 	}
-	else{
+	else {
 		reqInfo->method = UNSUPPORTED;
 		reqInfo->status = 501;
 		printf("not supported...\n");
@@ -50,12 +50,12 @@ int ParseHttpHeader(char* buffer, struct ReqInfo* reqInfo)
 
 	/* Get request resource length */
 	ptr = strchr(buffer, ' ');
-	if(NULL == ptr)
+	if (NULL == ptr)
 		len = strlen(buffer);
 	else
 		len = ptr - buffer;
 
-	if(0 == len){
+	if (0 == len) {
 		reqInfo->status = 400;
 		return -1;
 	}
@@ -96,7 +96,7 @@ int GetReqContent(int fd, struct ReqInfo* reqInfo)
 	tv.tv_sec  = 2;
 	tv.tv_usec = 0;
 
-	do{
+	do {
 		memset(buffer, '\0', MAX_REQ_LINE);
 
 		/* Reset sets */
@@ -104,32 +104,29 @@ int GetReqContent(int fd, struct ReqInfo* reqInfo)
 		FD_SET(fd, &fds);
 		
 		flag = select(fd + 1, &fds, NULL, NULL, &tv);
-		if(flag < 0){
+		if (flag < 0) {
 			perror("select fail !\n");
 			exit(1);
 		}
-		else if(flag == 0){
+		else if (flag == 0) {
 			/* timeout */
 			printf("select timeout...\n");
 			return -1;
 		}
-	
 		else{
 			ReadLine(fd, buffer, MAX_REQ_LINE);
 			Trim(buffer);
-            printf("recv\t%s", buffer);
+            printf("Recv: %s", buffer);
 
-			if((buffer[0] == '\r')&&(buffer[1] == '\n')){
+			if ((buffer[0] == '\r')&&(buffer[1] == '\n')) {
 				printf("buffer[0] == '0'\n");
 				break;
 			}
 			//if(ParseHttpHeader(buffer, reqInfo, m_pool))
-			if(ParseHttpHeader(buffer, reqInfo))
+			if (ParseHttpHeader(buffer, reqInfo))
 				break;
 		}
-	}while(reqInfo->type != SIMPLE);
-
-    printf("1111111111111111111111111111111\n");
+	} while (reqInfo->type != SIMPLE);
 	firstHeader = 1;
 
 	return 0;
@@ -143,8 +140,8 @@ ssize_t ReadLine(int fd, char* buffer, size_t len)
 
 	char    c;
 	/* the end char of buffer must be '\0'*/
-	for(n = 0; n < len-1 ; ++n){
-		if((rc = read(fd, &c, 1)) == 1){
+	for (n = 0; n < len-1 ; ++n) {
+		if ((rc = read(fd, &c, 1)) == 1) {
 			*buffer++ = c;
 			/* request header is end with '\r\n' */
 			if(c == '\n')

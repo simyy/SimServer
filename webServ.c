@@ -43,12 +43,12 @@ int main(int argc, char* argv[])
 	int    len = sizeof(struct sockaddr_in);
 
     /* as a daemon process*/
-	if(USEDAEMON)
+	if (USEDAEMON)
 		init_daemon();
 
 	/* Create Socket */
 	serv_fd = socket(AF_INET, SOCK_STREAM, 0);
-	if(serv_fd < 0){
+	if (serv_fd < 0) {
 		perror("create socket fail !\n");
 		exit(1);
 	}
@@ -62,52 +62,52 @@ int main(int argc, char* argv[])
 	/* Set address/port reuse in diffrent Socket */	
 	int on = 1;
 	ret = setsockopt(serv_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(int));
-	if(ret < 0){
+	if (ret < 0) {
 		perror("setsockopt Reuse fail !\n");
 		exit(1);
 	}
 
 	/* Disable the Nagle(TCP No Delay) algorithm */
 	ret = setsockopt(serv_fd, IPPROTO_TCP, TCP_NODELAY, (char*)&on, sizeof(int));
-	if(ret < 0){
+	if (ret < 0) {
 		perror("setsockopt Nodelay fail !\n");
 		exit(1);
 	}
 
 	/* Bind address to Socket */
 	ret = bind(serv_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-	if(ret < 0){
+	if (ret < 0) {
 		perror("bind fail !\n");
 		exit(1);
 	}
 	
 	/* Start to listen socket */
 	ret = listen(serv_fd, LISTEN_NUM);
-	if(ret < 0){
+	if (ret < 0) {
 		perror("listen fail !\n");
 		exit(1);
 	}
 
     /* select a event module */
-	if(USESELECT){
+	if (USESELECT) {
 	    // use select module
-        printf("select\n");
+        printf("Event: select\n");
 		select_process(serv_fd);
 		return 0;
 	}
-    else if(USEPOLL){
+    else if (USEPOLL) {
 	    // use poll module 
-        printf("poll\n");
+        printf("Event: poll\n");
 		poll_process(serv_fd);
 		return 0;
 	}
-    else if(USEEPOLL){
+    else if (USEEPOLL) {
 	    // use epoll module 
-        printf("epoll\n");
-		for(i = 0; i < WORKERS-1; ++i){
+        printf("Event: epoll\n");
+		for (i = 0; i < WORKERS-1; ++i) {
 			pid = fork();
 
-			switch(pid){
+			switch(pid) {
 			case -1:
 				printf("fork error!\n");
 				return -1;
@@ -125,14 +125,14 @@ int main(int argc, char* argv[])
 	}
     else {
 	    // normal module
-	    while(1){
+	    while(1) {
 	    	client_fd = accept(serv_fd, (struct sockaddr*)&client_addr, &len);
-	    	if(client_fd < 0){
+	    	if (client_fd < 0) {
 	    		perror("accept fail !\n");
 	    		continue;
 	    	}
 	    	pid = fork();
-	    	if(pid == 0){
+	    	if (pid == 0) {
 	    		close(serv_fd);
                 printf("process %d forked\n", getpid());
 	    		handleRequest(client_fd);
@@ -140,7 +140,6 @@ int main(int argc, char* argv[])
 	    	}
 	    	close(client_fd);
 	    	waitpid(-1, NULL, WNOHANG);
-	    	//handleRequest(client_fd);	
 	    }
     }
 	close(serv_fd);

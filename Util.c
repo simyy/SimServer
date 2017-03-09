@@ -24,7 +24,7 @@ void InitReqInfo(struct ReqInfo* reqInfo)
 
 void FreeReqInfo(struct ReqInfo* reqInfo)
 {
-	if(reqInfo->resource != NULL){
+	if (reqInfo->resource != NULL) {
 		free(reqInfo->resource);
 	}
 }	
@@ -42,7 +42,7 @@ void Trim(char* buffer)
 
 int Pipe(int pipefd[2])
 {
-	if(pipe(pipefd) == -1)
+	if (pipe(pipefd) == -1)
 		return 0;
 	return 1;
 }

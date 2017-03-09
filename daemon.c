@@ -18,18 +18,18 @@ void init_daemon(void)
 {
     int pid;
     int i;
-    if(pid=fork())
+    if (pid=fork())
         exit(0);       
-    else if(pid< 0)
+    else if (pid< 0)
         exit(1);
     setsid();          
     
-    if(pid=fork())
+    if (pid=fork())
         exit(0);     
-    else if(pid< 0)
+    else if (pid< 0)
         exit(1);
     
-    for(i=0;i< NOFILE;++i)  
+    for (i=0;i< NOFILE;++i)  
         close(i);
 
     chdir("./");      
