@@ -1,19 +1,26 @@
-# simpleServer
->This is a simple web server writing in C on Linux.
->Build in 2013, Copyright Xianda Yu, Based on Paul Griffiths 1999.
->Using socket to build a web server in c, and multiprocess to handle with some requests at the same time.
+# simserver
 
-## Install
-istall command:
+This is a simple web server writing in C on Linux.
+
+Build in 2013, Copyright Xianda Yu, Based on Paul Griffiths 1999.
+
+Using socket to build a web server in c, and multiprocess to handle with some requests at the same time.
+
+## install
+
+Install command,
+
 ```
 make
 ```
-clean unsource file:
+
+Clean unsource file,
 ```
 make clean
 ```
 
-## Update log
+## update log
+
 * 2013/11/19 : 
   * dd memory pool function.
   * fix bug in pool.		
